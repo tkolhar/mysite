@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<style>
+
+h1 { color: #7FFFD4; font-family: 'Lato', sans-serif; font-size: 54px; font-weight: 300; line-height: 58px; margin: 0 0 58px;; font-style: italic }
+
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=password], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 50%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: center;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+div {
+    border-radius: 5px;
+    background-color: #cccccc;
+    padding: 20px;
+    align-items: center;
+}
+
+p {
+    border-radius: 5px;
+    background-color: #cccccc;
+    padding: 20px;
+    align-items: center;
+    color: #00008B;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 20px;
+    margin: 0 0 18px;;
+    font-style: italic
+}
+
+a {
+    border-radius: 5px;
+    background-color: #cccccc;
+    padding: 20px;
+    align-items: center;
+    color: #00008B;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 20px;
+    margin: 0 0 18px;;
+    font-style: italic
+}
+
+body {
+    border-radius: 5px;
+    background-color:#00008B;
+    padding: 20px;
+}
+
+#clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 30px;
+}
+
+#clockdiv > div{
+    padding: 10px;
+    border-radius: 3px;
+    background: #00008B;
+    display: inline-block;
+}
+
+#clockdiv div > span{
+    padding: 15px;
+    border-radius: 3px;
+    background: #00816A;
+    display: inline-block;
+}
+
+.smalltext{
+    padding-top: 5px;
+    font-size: 16px;
+}
+
+</style>
+<h1>Alert for the Delay
+<script language="JavaScript">
+function getTimeRemaining(endtime) {
+  var t = Date.parse(endtime) - Date.parse(new Date());
+  var seconds = Math.floor((t / 1000) % 60);
+  var minutes = Math.floor((t / 1000 / 60) % 60);
+  return {
+    'total': t,
+    'minutes': minutes,
+    'seconds': seconds
+  };
+}
+
+function initializeClock(id, endtime) {
+  var clock = document.getElementById(id);
+  var minutesSpan = clock.querySelector('.minutes');
+  var secondsSpan = clock.querySelector('.seconds');
+
+  function updateClock() {
+    var t = getTimeRemaining(endtime);
+    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+    if (t.total <= 0) {
+      clearInterval(timeinterval);
+      document.getElementById('clockdiv').innerHTML = "You have crossed the alert";
+      var x = document.getElementById('alertid');
+      x.disabled = true;
+    }
+  }
+
+  updateClock();
+  var timeinterval = setInterval(updateClock, 1000);
+}
+
+var timeInMinutes = 1;
+var currentTime = Date.parse(new Date());
+var deadline = new Date(currentTime + timeInMinutes*60*1000);
+var c =0;
+//var deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
+window.onload = function() {initializeClock('clockdiv', deadline);};
+</script>
+</h1>
+<div id="clockdiv">
+
+  <div>
+    <span class="minutes"></span>
+    <div class="smalltext">Minutes</div>
+  </div>
+  <div>
+    <span class="seconds"></span>
+    <div class="smalltext">Seconds</div>
+  </div>
+</div>
+<p> <a href="/PCR/logout/">Logout</a></p>
+<div>
+<p>Alert update</p>
+<div>
+<form action="PCR/update/" method="post">
+    {% csrf_token %}
+    <span>
+    {{ form.as_p }}
+    </span>
+    <input type="submit" id='alertid' value="Submit" />
+</form>
+<p> <a href="/PCR/alertlist/">Alert list</a></p>
+</div>
+</html>
